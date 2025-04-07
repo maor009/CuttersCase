@@ -1,74 +1,171 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { Text, View, ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
+import MapView, { Callout, Marker, UrlTile } from "react-native-maps";
+import { fetchSalons } from "../../services/api";
+import { Salon } from "../../types/salon";
+import { grayMapStyle } from "../../constants/mapStyles";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const MapScreen = () => {
+  const [salons, setSalons] = useState<Salon[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedSalon, setSelectedSalon] = useState<Salon | null>(null);
 
-export default function HomeScreen() {
+  useEffect(() => {
+    const getSalons = async () => {
+      try {
+        const data = await fetchSalons();
+        setSalons(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch salons:", error);
+        setLoading(false);
+      }
+    };
+
+    getSalons();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#fff101" />
+      </View>
+    );
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <View style={styles.container}>
+      <MapView
+        style={styles.map}
+        customMapStyle={grayMapStyle}
+        initialRegion={{
+          latitude: 60.385654, // Bergen
+          longitude: 5.318090,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }}
+      >
+        {/* Map styling */}
+        <UrlTile
+          urlTemplate="https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png"
+          maximumZ={19}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+
+        {/* Fake user location in Bergen */}
+        <Marker
+          coordinate={{ latitude: 60.3913, longitude: 5.3221 }}
+          anchor={{ x: 0.5, y: 0.5 }}
+        >
+          <View style={styles.fakeUserMarkerOuter}>
+            <View style={styles.fakeUserMarkerInner} />
+          </View>
+        </Marker>
+
+        {/* Salon markers */}
+        {salons.map((salon) => (
+          <Marker
+            key={salon.id}
+            coordinate={{
+              latitude: parseFloat(salon.coordinates.latitude),
+              longitude: parseFloat(salon.coordinates.longitude),
+            }}
+            onPress={() => setSelectedSalon(salon)}
+          >
+            <View style={styles.customPin} />
+            <Callout tooltip>
+    {/* Empty callout to suppress default box */}
+    <View />
+  </Callout>
+          </Marker>
+        ))}
+      </MapView>
+
+      {/* Floating info card */}
+      {selectedSalon && (
+        <View style={styles.infoCard}>
+          <View>
+            <Text style={styles.infoTitle}>{selectedSalon.name}</Text>
+            <Text style={styles.infoAddress}>{selectedSalon.address}</Text>
+            <Text style={styles.infoPlace}>{selectedSalon.postalPlace}</Text>
+            <Text style={styles.infoCode}>{selectedSalon.postalCode}</Text>
+            
+          </View>
+          <TouchableOpacity onPress={() => setSelectedSalon(null)}>
+            <Text style={styles.closeButton}>✕</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: { flex: 1 },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  map: { flex: 1 },
+  customPin: {
+    width: 15,
+    height: 15,
+    borderRadius: 5,
+    backgroundColor: "#ffdd00",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  fakeUserMarkerOuter: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "rgba(0, 122, 255, 0.3)", // translucent blue
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  fakeUserMarkerInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#007AFF", // solid blue
+  },
+  infoCard: {
+    position: "absolute",
+    bottom: 90,
+    left: 20,
+    right: 20,
+    backgroundColor: "#333333",
+    borderRadius: 12,
+    padding: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  infoTitle: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginBottom: 4,
+    color: "#fff101",
+  },
+  infoAddress: {
+    fontSize: 14,
+    color: "#fff",
+  },
+  infoPlace: {
+    fontSize: 14,
+    color: "#fff",
+  },
+  infoCode: {
+    fontSize: 14,
+    color: "#fff",
+  },
+  closeButton: {
+    fontSize: 18,
+    color: "#fff101",
+    paddingLeft: 15,
   },
 });
+
+export default MapScreen;

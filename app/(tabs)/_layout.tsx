@@ -1,43 +1,66 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
+import { Platform, View } from 'react-native';
 import { useColorScheme } from '@/hooks/useColorScheme';
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
+import React from 'react';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
+  const renderTabIcon = (IconComponent: any, iconName: string, size: number) => ({ color, focused }: { color: string; focused: boolean }) => (
+    <View style={{ alignItems: 'center' }}>
+      {focused && (
+        <View
+          style={{
+            height: 4,
+            width: 24,
+            backgroundColor: '#FFD700',
+            borderRadius: 2,
+            marginBottom: 4,
+          }}
+        />
+      )}
+      <IconComponent name={iconName} size={size} color={color} />
+    </View>
+  );
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        tabBarActiveTintColor: '#FFD700', // Bright yellow for active tab
+        tabBarInactiveTintColor: '#888888', // Gray for inactive tabs
+        tabBarStyle: {
+          backgroundColor: '#1a1a1a', // Almost black background
+          borderTopWidth: 0,
+          height: 70,
+          paddingBottom: 10,
+          paddingTop: 10,
+          position: Platform.OS === 'ios' ? 'absolute' : 'relative',
+        },
       }}>
-      <Tabs.Screen
+            <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: '',
+          tabBarIcon: renderTabIcon(MaterialCommunityIcons, 'map-marker-radius', 28),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="orders"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: '',
+          tabBarIcon: renderTabIcon(Entypo, 'scissors', 24),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: '',
+          tabBarIcon: renderTabIcon(Octicons, 'person', 24),
         }}
       />
     </Tabs>
