@@ -1,15 +1,17 @@
+//File for Navigation bar 
+
 import { Tabs } from 'expo-router';
 import { Platform, View } from 'react-native';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
+//imported icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
+
 import React from 'react';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
+  //The tab icon for the selected tab will be focused
   const renderTabIcon = (IconComponent: any, iconName: string, size: number) => ({ color, focused }: { color: string; focused: boolean }) => (
     <View style={{ alignItems: 'center' }}>
       {focused && (
@@ -27,6 +29,7 @@ export default function TabLayout() {
     </View>
   );
 
+  //returning the tab component
   return (
     <Tabs
       screenOptions={{

@@ -1,3 +1,5 @@
+//Homescreen - Map over fetched salons
+
 import React, { useEffect, useState } from "react";
 import { Text, View, ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
 import MapView, { Callout, Marker, UrlTile } from "react-native-maps";
@@ -10,6 +12,7 @@ const MapScreen = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedSalon, setSelectedSalon] = useState<Salon | null>(null);
 
+  //Fetching salons from the api
   useEffect(() => {
     const getSalons = async () => {
       try {
@@ -25,6 +28,7 @@ const MapScreen = () => {
     getSalons();
   }, []);
 
+  //Loading screen
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -33,6 +37,7 @@ const MapScreen = () => {
     );
   }
 
+  //returning the map screen
   return (
     <View style={styles.container}>
       <MapView
@@ -45,7 +50,7 @@ const MapScreen = () => {
           longitudeDelta: 0.1,
         }}
       >
-        {/* Map styling */}
+        {/* Map styling with UrlTile */}
         <UrlTile
           urlTemplate="https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png"
           maximumZ={19}
@@ -80,7 +85,7 @@ const MapScreen = () => {
         ))}
       </MapView>
 
-      {/* Floating info card */}
+      {/* Floating info card - when the user clicks on a salon */}
       {selectedSalon && (
         <View style={styles.infoCard}>
           <View>
@@ -99,6 +104,7 @@ const MapScreen = () => {
   );
 };
 
+//Styling
 const styles = StyleSheet.create({
   container: { flex: 1 },
   loaderContainer: {
@@ -117,7 +123,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: "rgba(0, 122, 255, 0.3)", // translucent blue
+    backgroundColor: "rgba(0, 122, 255, 0.3)", 
     justifyContent: "center",
     alignItems: "center",
   },
@@ -125,7 +131,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#007AFF", // solid blue
+    backgroundColor: "#007AFF", 
   },
   infoCard: {
     position: "absolute",

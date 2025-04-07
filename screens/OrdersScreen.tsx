@@ -1,8 +1,10 @@
+// Screen for a users orders
 import React from "react";
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const OrdersScreen = () => {
+  //Added elements to mimic the cutters orders screen
   return (
     <SafeAreaView style={styles.mainContainer}>
       <Text style={styles.header}>Dine bestillinger</Text>
@@ -46,6 +48,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "#fff",
     fontWeight: "bold",
+    //Platform specific adjustments
     paddingTop: Platform.select({ ios: 20, android: 10 }),
     paddingBottom: 10,
   },
@@ -82,6 +85,7 @@ const styles = StyleSheet.create({
     maxWidth: "90%",
   },
   bottomContainer: {
+    //Platform specific adjustments
     paddingBottom: Platform.select({ ios: 60, android: 40 }),
   },
   salonButton: {

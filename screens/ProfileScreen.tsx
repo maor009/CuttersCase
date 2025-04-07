@@ -1,9 +1,11 @@
+// Screen for user profile
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform  } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
+  //Added elements to mimic the cutters profile screen
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -37,13 +39,14 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#0a0a0a', // Almost black
+      backgroundColor: '#0a0a0a', 
       paddingHorizontal: 20,
     },
     content: {
       flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    //Platform specific adjustments
     paddingTop: Platform.select({ ios: 40, android: 20 }),
     },
     title: {
@@ -62,6 +65,7 @@ const styles = StyleSheet.create({
       
     },
     menuContainer: {
+      //Platform specific adjustments
       paddingBottom: Platform.select({ ios: 60, android: 40 }),
     },
     menuItem: {
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#333',
     },
     loginButton: {
-      backgroundColor: '#FFD700', // Yellow
+      backgroundColor: '#FFD700', 
       paddingVertical: 14,
       borderRadius: 20,
       alignItems: 'center',

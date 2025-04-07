@@ -1,6 +1,6 @@
-//API base and endpoint 
+//API
 
-// services/api.ts
+//Calling the api's endpoint to fetch data
 export const SALONS_ENDPOINT = "https://api.test.cutters.no/v2/salons";
 
 import { Salon } from "../types/salon";

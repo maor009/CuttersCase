@@ -1,6 +1,5 @@
 //Data for salons
 
-// types/salon.ts
 export interface Salon {
     id: number;
     name: string;
