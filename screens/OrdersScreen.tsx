@@ -35,9 +35,11 @@ const OrdersScreen = () => {
 
 export default OrdersScreen;
 
+//setting the size of the circle
 const { width } = Dimensions.get("window");
 const circleSize = width * 0.6;
 
+//Styling
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,

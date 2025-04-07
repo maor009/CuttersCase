@@ -1,4 +1,4 @@
-// Tried to customize the maps colours
+// Tried to customize the maps colors
 
 export const grayMapStyle = [
     { elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },

@@ -36,6 +36,7 @@ export default function ProfileScreen() {
   );
 }
 
+//Styling
 const styles = StyleSheet.create({
     container: {
       flex: 1,

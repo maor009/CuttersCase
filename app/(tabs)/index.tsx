@@ -20,6 +20,7 @@ const MapScreen = () => {
         setSalons(data);
         setLoading(false);
       } catch (error) {
+        //Handling error
         console.error("Failed to fetch salons:", error);
         setLoading(false);
       }

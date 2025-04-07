@@ -29,7 +29,7 @@ export default function TabLayout() {
     </View>
   );
 
-  //returning the tab component
+  //Returning the tab component
   return (
     <Tabs
       screenOptions={{
